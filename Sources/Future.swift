@@ -44,13 +44,25 @@ public struct Future<T, E: Error> {
 
 public extension Future {
     
-    /// Maps the result of a future by performing `f` onto the result.
+    /// Maps the success scenario of a future by performing `f` onto the result.
     public func map<U>(_ f: @escaping (T) -> U) -> Future<U, E> {
         return Future<U, E>(operation: { completion in
             self.start { result in
                 switch result {
                 case .success(let value): completion(.success(f(value)))
                 case .failure(let error): completion(.failure(error))
+                }
+            }
+        })
+    }
+    
+    /// Maps the failure scenario of a future by performing `f` onto the result.
+    public func mapError<U>(_ f: @escaping (E) -> U) -> Future<T, U> {
+        return Future<T, U>(operation: { completion in
+            self.start { result in
+                switch result {
+                case .success(let value): completion(.success(value))
+                case .failure(let error): completion(.failure(f(error)))
                 }
             }
         })

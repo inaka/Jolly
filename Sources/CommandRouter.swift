@@ -104,12 +104,18 @@ class CommandRouter {
                 notification = Notification(message: Messages.alreadyWatching(repo: existentRepo), color: .green, shouldNotify: true)
                 break
             }
-            let canWatch = text.hasPrefix("inaka") // Hardcoded. Replace with Github API request for getting repo detail
-            if canWatch {
-                self.cache.add(repo, toRoomWithId: self.roomId)
-                notification = Notification(message: Messages.watchingWithSuccess(repo: repo), color: .green, shouldNotify: true)
-            } else {
-                notification = Notification(message: Messages.couldNotWatch(repo: repo), color: .red, shouldNotify: true)
+            return Future() { completion in
+                RepoSpecProvider().fetchSpec(for: repo).start() { result in
+                    let notification: Notification
+                    switch result {
+                    case .success(_):
+                        self.cache.add(repo, toRoomWithId: self.roomId)
+                        notification = Notification(message: Messages.watchingWithSuccess(repo: repo), color: .green, shouldNotify: true)
+                    case .failure(_):
+                        notification = Notification(message: Messages.couldNotWatch(repo: repo), color: .red, shouldNotify: true)
+                    }
+                    completion(.success(notification))
+                }
             }
             
         case ("/jolly", "unwatch", let text):
