@@ -43,9 +43,7 @@ struct Messages {
     static let yoDawg = Notification.Message("(yodawg)", format: .text)
     
     static let cleared = Notification.Message("🙈 Ok, I'm no longer watching anything!")
-    
-    // TODO: Cannot watch (ping repo and check if !2xx)
-    
+        
     static func alreadyWatching(repo: Repo) -> Notification.Message {
         return Notification.Message("🐵 I'm already watching \(repo.htmlLink) !")
     }
