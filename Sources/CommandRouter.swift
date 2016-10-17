@@ -30,25 +30,32 @@ class CommandRouter {
     private let authToken = "UcwWAeGwN3YFOYjlQ9soiK8hI8C1Rli4pQSML9G3" // TODO: DO NOT PUSH TOKENS TO THE REPO!
     
     func handle(_ command: Command) -> Future<String, Error> {
-        let notification = self.notification(for: command)
-        let path = "https://api.hipchat.com/v2/room/\(roomId)/notification?auth_token=\(authToken)"
-        guard let sender = try? NotificationSender(path: path) else {
-            return Future() { completion in completion(.failure(.couldNotCreateNotificationSender)) }
-        }
-        let future: Future<String, Error> = Future() { completion in
-            sender.send(notification).start() { result in
+        return Future() { completion in
+            let path = "https://api.hipchat.com/v2/room/\(self.roomId)/notification?auth_token=\(self.authToken)"
+            guard let sender = try? NotificationSender(path: path) else {
+                completion(.failure(.couldNotCreateNotificationSender))
+                return
+            }
+            self.notification(for: command).start() { result in
                 switch result {
-                case .success(_):
-                    completion(.success(path))
-                case .failure(_):
-                    completion(.failure(.errorSendingNotification))
+                case .success(let notification):
+                    sender.send(notification).start() { result in
+                        switch result {
+                        case .success(_):
+                            completion(.success(path))
+                        case .failure(_):
+                            completion(.failure(.errorSendingNotification))
+                        }
+                    }
+                case .failure(let error):
+                    completion(.failure(error))
                 }
             }
         }
-        return future
     }
     
-    private func notification(for command: Command) -> Notification {
+    private func notification(for command: Command) -> Future<Notification, Error> {
+        
         let notification: Notification
         
         switch command {
@@ -67,11 +74,19 @@ class CommandRouter {
             notification = Notification(message: Messages.list(with: repos), color: .green, shouldNotify: true)
             
         case ("/jolly", "report", _):
-            let specs = self.cache.repos(forRoomWithId: self.roomId)
-                .map { RepoSpec(url: URL(string: "https://github.com/\($0.fullName)")!,
-                                fullName: $0.fullName, stars: 0, forks: 0, pullRequests: 0, issues: 0) }
-            notification = Notification(message: Messages.report(with: specs), color: .purple, shouldNotify: true)
-            
+            let repos = self.cache.repos(forRoomWithId: self.roomId)
+            return Future() { completion in
+                RepoSpecProvider().fetchSpecs(for: repos).start() { result in
+                    switch result {
+                    case .success(let specs):
+                        let notification = Notification(message: Messages.report(with: specs), color: .purple, shouldNotify: true)
+                        completion(.success(notification))
+                    case .failure(_):
+                        completion(.failure(.errorCreatingNotification))
+                    }
+                }
+            }
+    
         case ("/jolly", "clear", _):
             notification = Notification(message: Messages.cleared, color: .gray, shouldNotify: false)
             
@@ -122,11 +137,12 @@ class CommandRouter {
             
         }
         
-        return notification
+        return Future() { completion in completion(.success(notification)) }
     }
     
     enum Error: Swift.Error {
         case couldNotCreateNotificationSender
+        case errorCreatingNotification
         case errorSendingNotification
     }
     

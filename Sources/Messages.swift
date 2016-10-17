@@ -99,7 +99,7 @@ extension Repo {
 extension RepoSpec {
     
     var htmlTableRow: String {
-        return "<tr><td>&emsp;→ \(htmlLink)</td><td>↰ <b>\(pullRequests)</b> PRs</td><td>⚠︎ <b>\(issues)</b> issues</td><td>⭑ <b>\(stars)</b> stars</td><td>⑂ <b>\(forks)</b> forks</td></tr>"
+        return "<tr><td>&emsp;→ \(htmlLink)</td><td>⚠︎ <b>\(issues)</b> issues</td><td>⭑ <b>\(stars)</b> stars</td><td>⑂ <b>\(forks)</b> forks</td></tr>"
     }
     
     private var htmlLink: String {

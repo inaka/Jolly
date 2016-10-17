@@ -21,6 +21,5 @@ struct RepoSpec {
     let fullName: String
     let stars: Int
     let forks: Int
-    let pullRequests: Int
     let issues: Int
 }
