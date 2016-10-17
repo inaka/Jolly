@@ -37,7 +37,7 @@ class RepoSpecProvider {
                         specs += [spec]
                     }
                     if left == 0 {
-                        completion(.success(specs.sorted { $0.fullName < $1.fullName }))
+                        completion(.success(specs.sorted { $0.fullName.lowercased() < $1.fullName.lowercased() }))
                     }
                 }
             }

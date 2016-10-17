@@ -27,7 +27,7 @@ class CommandRouter {
         roomId = id
     }
     
-    private let authToken = "UcwWAeGwN3YFOYjlQ9soiK8hI8C1Rli4pQSML9G3" // TODO: DO NOT PUSH TOKENS TO THE REPO!
+    private let authToken = "UcwWAeGwN3YFOYjlQ9soiK8hI8C1Rli4pQSML9G3" // From hipchat integration. TODO: Deal with it.
     
     func handle(_ command: Command) -> Future<String, Error> {
         return Future() { completion in

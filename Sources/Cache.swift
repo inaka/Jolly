@@ -50,7 +50,7 @@ class Cache {
     func repos(forRoomWithId roomId: String) -> [Repo] {
         guard let reposIds = self.defaults.value(forKey: roomId) as? [String] else { return [Repo]() }
         return reposIds
-            .sorted()
+            .sorted { $0.lowercased() < $1.lowercased() }
             .flatMap { Repo(fullName: $0) }
     }
     
