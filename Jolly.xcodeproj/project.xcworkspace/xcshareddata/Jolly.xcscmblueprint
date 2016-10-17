@@ -1,0 +1,58 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "DE930AEF57AAFE0205C6EAD84BF778B551AB119D",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "40635794C1929E96A4709153927459486D34FA7B" : 9223372036854775807,
+    "B48A9580752F9C43885C949B19DDA563AC9BB228" : 9223372036854775807,
+    "85E996FB125657C20E42A299A76F925867A7A6E4" : 9223372036854775807,
+    "1A81AC7E588BE86E760603555BCE76FB0C611997" : 9223372036854775807,
+    "DE930AEF57AAFE0205C6EAD84BF778B551AB119D" : 9223372036854775807,
+    "C861FC00CEE0F6A6BE81FCFF6785FAA78C58EBB3" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0C9390C6-244D-468D-ABB9-EE341DC4DFBB",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "40635794C1929E96A4709153927459486D34FA7B" : "Jolly\/Packages\/Kitura-net-1.0.2\/",
+    "B48A9580752F9C43885C949B19DDA563AC9BB228" : "Jolly\/Packages\/CHTTPParser-0.3.0\/",
+    "85E996FB125657C20E42A299A76F925867A7A6E4" : "Jolly\/Packages\/LoggerAPI-1.0.0\/",
+    "1A81AC7E588BE86E760603555BCE76FB0C611997" : "Jolly\/Packages\/Kitura-TemplateEngine-1.0.0\/",
+    "DE930AEF57AAFE0205C6EAD84BF778B551AB119D" : "Jolly\/",
+    "C861FC00CEE0F6A6BE81FCFF6785FAA78C58EBB3" : "Jolly\/Packages\/SwiftyJSON-14.2.1\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Jolly",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Jolly.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/IBM-Swift\/Kitura-TemplateEngine.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1A81AC7E588BE86E760603555BCE76FB0C611997"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/IBM-Swift\/Kitura-net.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "40635794C1929E96A4709153927459486D34FA7B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/IBM-Swift\/LoggerAPI.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "85E996FB125657C20E42A299A76F925867A7A6E4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/IBM-Swift\/CHTTPParser.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B48A9580752F9C43885C949B19DDA563AC9BB228"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/IBM-Swift\/SwiftyJSON.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C861FC00CEE0F6A6BE81FCFF6785FAA78C58EBB3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:inaka\/Jolly",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DE930AEF57AAFE0205C6EAD84BF778B551AB119D"
+    }
+  ]
+}
