@@ -26,15 +26,22 @@ class RepoSpecProvider {
     }
     
     func fetchSpecs(for repos: [Repo]) -> Future<[RepoSpec], Error> {
-        
-        let repo = repos.first!
-        return self.fetchSpec(for: repo).map { [$0] }
-        
-        
-//            // Hardcoded
-//            let specs = repos.map { RepoSpec(url: URL(string: "https://github.com/\($0.fullName)")!,
-//                                             fullName: $0.fullName, stars: 0, forks: 0, pullRequests: 0, issues: 0) }
-//            completion(.success(specs))
+        // ⚠️ Check possible threading issues due to race conditions
+        return Future() { completion in
+            var left = repos.count
+            var specs = [RepoSpec]()
+            for repo in repos {
+                self.fetchSpec(for: repo).start() { result in
+                    left -= 1
+                    if case .success(let spec) = result {
+                        specs += [spec]
+                    }
+                    if left == 0 {
+                        completion(.success(specs.sorted { $0.fullName < $1.fullName }))
+                    }
+                }
+            }
+        }
     }
     
     let urlSession = URLSession.shared
