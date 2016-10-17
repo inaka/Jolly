@@ -57,7 +57,8 @@ class NotificationSender {
     private func data(from notification: Notification) -> Data? {
         
         func dictionary(from notification: Notification) -> [String: Any] {
-            return ["color": notification.color.rawValue,
+            return ["from": "Jolly",
+                    "color": notification.color.rawValue,
                     "message": notification.message.text,
                     "notify": notification.shouldNotify,
                     "message_format": notification.message.format.rawValue]

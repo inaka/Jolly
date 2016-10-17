@@ -27,30 +27,20 @@ class CommandRouter {
         roomId = id
     }
     
-    private let authToken = "UcwWAeGwN3YFOYjlQ9soiK8hI8C1Rli4pQSML9G3" // From hipchat integration. TODO: Deal with it.
-    
     func handle(_ command: Command) -> Future<String, Error> {
-        return Future() { completion in
-            let path = "https://api.hipchat.com/v2/room/\(self.roomId)/notification?auth_token=\(self.authToken)"
-            guard let sender = try? NotificationSender(path: path) else {
-                completion(.failure(.couldNotCreateNotificationSender))
-                return
-            }
-            self.notification(for: command).start() { result in
-                switch result {
-                case .success(let notification):
-                    sender.send(notification).start() { result in
-                        switch result {
-                        case .success(_):
-                            completion(.success(path))
-                        case .failure(_):
-                            completion(.failure(.errorSendingNotification))
-                        }
-                    }
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
+        guard let authToken = Environment.shared.hipchatToken else {
+            print("Missing hipchat auth token")
+            return Future() { completion in completion(.failure(.hipchatTokenNotFound)) }
+        }
+        let path = "https://api.hipchat.com/v2/room/\(self.roomId)/notification?auth_token=\(authToken)"
+        guard let sender = try? NotificationSender(path: path) else {
+            return Future() { completion in completion(.failure(.couldNotCreateNotificationSender)) }
+        }
+        return self.notification(for: command)
+            .andThen {
+                sender.send($0)
+                    .map { _ in return path }
+                    .mapError { _ in return .errorSendingNotification }
         }
     }
     
@@ -150,6 +140,7 @@ class CommandRouter {
         case couldNotCreateNotificationSender
         case errorCreatingNotification
         case errorSendingNotification
+        case hipchatTokenNotFound
     }
     
 }

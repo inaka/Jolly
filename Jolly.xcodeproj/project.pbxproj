@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		51661CC81DB5077D002F60FA /* RepoSpecProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51661CC61DB5071D002F60FA /* RepoSpecProvider.swift */; };
 		51661CCB1DB5105A002F60FA /* RepoSpecParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51661CC91DB51008002F60FA /* RepoSpecParser.swift */; };
+		5176B7DB1DB5458B004E03D8 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5176B7D91DB544B3004E03D8 /* Environment.swift */; };
 		_LinkFileRef_CHTTPParser_via_Jolly /* CHTTPParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_CHTTPParser" /* CHTTPParser.framework */; };
 		_LinkFileRef_CHTTPParser_via_Kitura /* CHTTPParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_CHTTPParser" /* CHTTPParser.framework */; };
 		_LinkFileRef_CHTTPParser_via_KituraNet /* CHTTPParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_CHTTPParser" /* CHTTPParser.framework */; };
@@ -192,6 +193,7 @@
 /* Begin PBXFileReference section */
 		51661CC61DB5071D002F60FA /* RepoSpecProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepoSpecProvider.swift; sourceTree = "<group>"; };
 		51661CC91DB51008002F60FA /* RepoSpecParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepoSpecParser.swift; sourceTree = "<group>"; };
+		5176B7D91DB544B3004E03D8 /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		__PBXFileRef_Jolly.xcodeproj/Configs/Project.xcconfig /* Jolly.xcodeproj/Configs/Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Jolly.xcodeproj/Configs/Project.xcconfig; sourceTree = "<group>"; };
 		__PBXFileRef_Package.swift /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		"__PBXFileRef_Packages/CHTTPParser-0.3.0/Sources/CHTTPParser/http_parser.c" /* http_parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = http_parser.c; sourceTree = "<group>"; };
@@ -489,6 +491,7 @@
 				51661CC61DB5071D002F60FA /* RepoSpecProvider.swift */,
 				__PBXFileRef_Sources/Result.swift /* Result.swift */,
 				"__PBXFileRef_Sources/URLRequest+HTTP.swift" /* URLRequest+HTTP.swift */,
+				5176B7D91DB544B3004E03D8 /* Environment.swift */,
 			);
 			name = Jolly;
 			path = Sources;
@@ -870,6 +873,7 @@
 				__src_cc_ref_Sources/Cache.swift /* Cache.swift in Sources */,
 				__src_cc_ref_Sources/CommandRouter.swift /* CommandRouter.swift in Sources */,
 				__src_cc_ref_Sources/Future.swift /* Future.swift in Sources */,
+				5176B7DB1DB5458B004E03D8 /* Environment.swift in Sources */,
 				__src_cc_ref_Sources/main.swift /* main.swift in Sources */,
 				__src_cc_ref_Sources/Messages.swift /* Messages.swift in Sources */,
 				51661CC81DB5077D002F60FA /* RepoSpecProvider.swift in Sources */,
