@@ -16,11 +16,16 @@ DerivedData/
 *.perspectivev3
 !default.perspectivev3
 xcuserdata/
-.DS_Store
+
+## xcodeproj
+## We are currently ignoring the generated `xcodeproj` due to Swift Package Manager issues (xcodeproj modulemaps include absolute local paths)
+## In order to generate your own xcodeproj, run `swift package generate-xcodeproj`
+*.xcodeproj
 
 ## Other
 *.moved-aside
 *.xcuserstate
+*.DS_Store
 
 ## Obj-C/Swift specific
 *.hmap
