@@ -1,5 +1,0 @@
-framework module CHTTPParser {
-    umbrella "/Users/pablovillar/Desktop/Projects/Jolly/Packages/CHTTPParser-0.3.0/Sources/CHTTPParser/include"
-    link framework "CHTTPParser"
-    export *
-}
