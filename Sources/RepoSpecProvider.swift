@@ -26,7 +26,7 @@ class RepoSpecProvider {
     }
     
     func fetchSpecs(for repos: [Repo]) -> Future<[RepoSpec], Error> {
-        // ⚠️ Check possible threading issues due to race conditions
+        // ⛔️ FIXME: This is not thread-safe
         return Future() { completion in
             var left = repos.count
             var specs = [RepoSpec]()
