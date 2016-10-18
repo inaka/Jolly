@@ -30,7 +30,11 @@ import Foundation
 
 class Cache {
     
-    let defaults = UserDefaults.standard
+    let defaults: UserDefaults
+
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+    }
     
     func add(_ repo: Repo, toRoomWithId roomId: String) {
         let repoId = repo.fullName
