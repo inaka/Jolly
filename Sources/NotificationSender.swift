@@ -22,28 +22,26 @@ class NotificationSender {
         case badURL
     }
     
-    init(path: String) throws {
+    init(path: String, urlSession: URLSession = .shared) throws {
         guard let url = URL(string: path) else {
             throw ConstructionError.badURL
         }
         self.url = url
+        self.urlSession = urlSession
     }
     
     let url: URL
+    let urlSession: URLSession
     
     enum Error: Swift.Error {
-        case notificationCannotBeBuilt
         case responseError
     }
     
     func send(_ notification: Notification) -> Future<Void, Error> {
         return Future() { completion in
-            guard let data = self.data(from: notification) else {
-                completion(.failure(.notificationCannotBeBuilt))
-                return
-            }
+            let data = self.data(from: notification)
             let request = URLRequest.postRequest(to: self.url, with: data)
-            URLSession.shared.dataTask(with: request) { data, response, error in
+            self.urlSession.dataTask(with: request) { data, response, error in
                 if error != nil {
                     completion(.failure(.responseError))
                     return
@@ -54,7 +52,7 @@ class NotificationSender {
     }
     
     
-    private func data(from notification: Notification) -> Data? {
+    private func data(from notification: Notification) -> Data {
         
         func dictionary(from notification: Notification) -> [String: Any] {
             return ["from": "Jolly",
@@ -65,7 +63,7 @@ class NotificationSender {
         }
         
         let json = dictionary(from: notification)
-        return try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        return try! JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         
     }
     

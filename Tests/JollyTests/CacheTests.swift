@@ -2,11 +2,6 @@ import XCTest
 @testable import Jolly
 
 class CacheTests: XCTestCase {
-    static var allTests : [(String, (CacheTests) -> () throws -> Void)] {
-        return [
-            ("testAddRepo", testAddRepo)
-        ]
-    }
     
     var cache: Cache!
     
