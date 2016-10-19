@@ -411,10 +411,10 @@ class CommandRouterTests: XCTestCase {
 
 class FakeNotificationSender: NotificationSender {
     
-    var notification: Notification?
+    var notification: Jolly.Notification?
     var shouldGetNotificationDeliveryFailure = false
     
-    override func send(_ notification: Notification) -> Future<Void, NotificationSender.Error> {
+    override func send(_ notification: Jolly.Notification) -> Future<Void, NotificationSender.Error> {
         self.notification = notification
         return Future() { completion in
             if self.shouldGetNotificationDeliveryFailure {
