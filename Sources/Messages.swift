@@ -36,8 +36,8 @@ struct Messages {
     
     static let unwatchHelp = Notification.Message("🙊 Want to remove a repo from the list? Please, <b>specify the repo</b>.<br>∙ <b>Format</b>: <code>/jolly unwatch :org/:repo</code><br>∙ <b>Example</b>: <code>/jolly unwatch inaka/Jayme</code>")
     
-    static func unknown(command: Command) -> Notification.Message {
-        return Notification.Message("🙊 I don't know what <code>\(String.from(command))</code> is supposed to mean... Need help? type <code>/jolly</code>")
+    static func unknown(message: String) -> Notification.Message {
+        return Notification.Message("🙊 I don't know what <code>\(message))</code> is supposed to mean... Need help? type <code>/jolly</code>")
     }
     
     static let yoDawg = Notification.Message("(yodawg)", format: .text)

@@ -10,20 +10,8 @@ class NotificationSenderTests: XCTestCase {
         super.setUp()
         continueAfterFailure = false
         session = FakeURLSession()
-        sender = try? NotificationSender(path: "localhost", urlSession: session)
+        sender = NotificationSender(roomId: "1", authenticationToken: "token", urlSession: session)
         XCTAssertNotNil(sender)
-    }
-    
-    func testGoodPathConstructor() {
-        guard let _ = try? NotificationSender(path: "good_guy_path") else {
-            XCTFail("Sender should have been built"); return
-        }
-    }
-    
-    func testBadPathConstructor() {
-        if let _ = try? NotificationSender(path: "sçumbag_path") {
-            XCTFail("Sender should not have been built")
-        }
     }
     
     func testURLRequestHTTPMethod() {
@@ -43,11 +31,12 @@ class NotificationSenderTests: XCTestCase {
     }
     
     func testURLRequestPath() {
+        let sender = NotificationSender(roomId: "123", authenticationToken: "asd", urlSession: session)
         let notification = Notification(message: Notification.Message("test"))
         sender.send(notification).start() { _ in }
         let url = session.dataTasks.first?.request?.url
         XCTAssertNotNil(url)
-        XCTAssertEqual(url!.absoluteString, "localhost")
+        XCTAssertEqual(url!.absoluteString, "https://api.hipchat.com/v2/room/123/notification?auth_token=asd")
     }
     
     func testURLRequestBodyData() {
@@ -81,8 +70,7 @@ class NotificationSenderTests: XCTestCase {
     func testSuccessfulResponse() {
         let params: DataTaskCompletionParameters = (Data(), URLResponse(), nil)
         let session = FakeURLSession(customDataTaskCompletionParameters: params)
-        sender = try? NotificationSender(path: "localhost", urlSession: session)
-        XCTAssertNotNil(sender)
+        let sender = NotificationSender(roomId: "x", authenticationToken: "x", urlSession: session)
         let notification = Notification(message: Notification.Message("test"))
         let future = sender.send(notification)
         let expectation = self.expectation(description: "Expected .success")
@@ -98,8 +86,7 @@ class NotificationSenderTests: XCTestCase {
     func testResponseWithError() {
         let params: DataTaskCompletionParameters = (nil, nil, NotificationSender.Error.responseError)
         let session = FakeURLSession(customDataTaskCompletionParameters: params)
-        sender = try? NotificationSender(path: "localhost", urlSession: session)
-        XCTAssertNotNil(sender)
+        let sender = NotificationSender(roomId: "x", authenticationToken: "x", urlSession: session)
         let notification = Notification(message: Notification.Message("test"))
         let future = sender.send(notification)
         let expectation = self.expectation(description: "Expected .failure with .responseError")

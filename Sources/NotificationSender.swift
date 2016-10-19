@@ -18,20 +18,16 @@ import Foundation
 
 class NotificationSender {
     
-    enum ConstructionError: Swift.Error {
-        case badURL
-    }
-    
-    init(path: String, urlSession: URLSession = .shared) throws {
-        guard let url = URL(string: path) else {
-            throw ConstructionError.badURL
-        }
-        self.url = url
+    init(roomId: String, authenticationToken token: String, urlSession: URLSession = .shared) {
+        let path = "https://api.hipchat.com/v2/room/\(roomId)/notification?auth_token=\(token)"
+        self.url = URL(string: path)!
+        self.roomId = roomId
         self.urlSession = urlSession
     }
     
-    let url: URL
     let urlSession: URLSession
+    let roomId: String
+    private let url: URL
     
     enum Error: Swift.Error {
         case responseError
