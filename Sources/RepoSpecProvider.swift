@@ -18,6 +18,14 @@ import Foundation
 
 class RepoSpecProvider {
     
+    let urlSession: URLSession
+    let parser: RepoSpecParser
+    
+    init(urlSession: URLSession = .shared, parser: RepoSpecParser = RepoSpecParser()) {
+        self.urlSession = urlSession
+        self.parser = parser
+    }
+    
     enum Error: Swift.Error {
         case responseError
         case dataError
@@ -26,9 +34,13 @@ class RepoSpecProvider {
     }
     
     func fetchSpecs(for repos: [Repo]) -> Future<[RepoSpec], Error> {
-        // ⚠️ Check possible threading issues due to race conditions
+        // ⛔️ FIXME: This is not thread-safe
         return Future() { completion in
             var left = repos.count
+            if left == 0 {
+                completion(.success([RepoSpec]()))
+                return
+            }
             var specs = [RepoSpec]()
             for repo in repos {
                 self.fetchSpec(for: repo).start() { result in
@@ -44,8 +56,6 @@ class RepoSpecProvider {
         }
     }
     
-    let urlSession = URLSession.shared
-    
     func fetchSpec(for repo: Repo) -> Future<RepoSpec, Error> {
         let url = URL(string: "https://api.github.com/repos/\(repo.organization)/\(repo.name)")!
         let request = URLRequest.githubGETRequest(for: url)
@@ -59,7 +69,7 @@ class RepoSpecProvider {
                     let data = data,
                     let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments),
                     let dict = json as? [String: Any],
-                    let spec = RepoSpecParser().repoSpec(from: dict)
+                    let spec = self.parser.repoSpec(from: dict)
                     else {
                         completion(.failure(.dataError)); return
                 }

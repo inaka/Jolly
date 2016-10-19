@@ -20,32 +20,32 @@ typealias Command = (String, String, String)
 
 class CommandRouter {
     
-    let roomId: String
-    let cache = Cache()
+    let cache: Cache
+    let notificationSender: NotificationSender
+    let repoSpecProvider: RepoSpecProvider
     
-    init(forRoomWithId id: String) {
-        roomId = id
+    var roomId: String {
+        return self.notificationSender.roomId
     }
     
-    func handle(_ command: Command) -> Future<String, Error> {
-        guard let authToken = Environment.shared.hipchatToken else {
-            print("Missing hipchat auth token")
-            return Future() { completion in completion(.failure(.hipchatTokenNotFound)) }
-        }
-        let path = "https://api.hipchat.com/v2/room/\(self.roomId)/notification?auth_token=\(authToken)"
-        guard let sender = try? NotificationSender(path: path) else {
-            return Future() { completion in completion(.failure(.couldNotCreateNotificationSender)) }
-        }
-        return self.notification(for: command)
+    init(notificationSender: NotificationSender, repoSpecProvider: RepoSpecProvider = RepoSpecProvider(), cache: Cache = Cache()) {
+        self.notificationSender = notificationSender
+        self.repoSpecProvider = repoSpecProvider
+        self.cache = cache
+    }
+    
+    func handle(_ message: String) -> Future<Void, Error> {
+        return self.notification(for: message)
             .andThen {
-                sender.send($0)
-                    .map { _ in return path }
+                self.notificationSender.send($0)
+                    .map { _ in return }
                     .mapError { _ in return .errorSendingNotification }
         }
     }
     
-    private func notification(for command: Command) -> Future<Notification, Error> {
+    private func notification(for message: String) -> Future<Notification, Error> {
         
+        let command = message.commandValue
         let notification: Notification
         
         switch command {
@@ -66,18 +66,22 @@ class CommandRouter {
         case ("/jolly", "report", _):
             let repos = self.cache.repos(forRoomWithId: self.roomId)
             return Future() { completion in
-                RepoSpecProvider().fetchSpecs(for: repos).start() { result in
+                self.repoSpecProvider.fetchSpecs(for: repos).start() { result in
                     switch result {
                     case .success(let specs):
                         let notification = Notification(message: Messages.report(with: specs), color: .purple, shouldNotify: true)
                         completion(.success(notification))
                     case .failure(_):
-                        completion(.failure(.errorCreatingNotification))
+                        completion(.failure(.errorFetchingRepoSpecs))
                     }
                 }
             }
     
         case ("/jolly", "clear", _):
+            let repos = self.cache.repos(forRoomWithId: self.roomId)
+            for repo in repos {
+                self.cache.remove(repo, fromRoomWithId: self.roomId)
+            }
             notification = Notification(message: Messages.cleared, color: .gray, shouldNotify: false)
             
         case ("/jolly", "watch", ""):
@@ -95,7 +99,7 @@ class CommandRouter {
                 break
             }
             return Future() { completion in
-                RepoSpecProvider().fetchSpec(for: repo).start() { result in
+                self.repoSpecProvider.fetchSpec(for: repo).start() { result in
                     let notification: Notification
                     switch result {
                     case .success(_):
@@ -107,6 +111,9 @@ class CommandRouter {
                     completion(.success(notification))
                 }
             }
+            
+        case ("/jolly", "unwatch", ""):
+            notification = Notification(message: Messages.unwatchHelp, color: .yellow, shouldNotify: true)
             
         case ("/jolly", "unwatch", let text):
             guard let repo = Repo(fullName: text) else {
@@ -122,14 +129,11 @@ class CommandRouter {
             self.cache.remove(existentRepo, fromRoomWithId: self.roomId)
             notification = Notification(message: Messages.unwatchingWithSuccess(repo: repo), color: .green, shouldNotify: true)
             
-        case ("/jolly", "unwatch", ""):
-            notification = Notification(message: Messages.unwatchHelp, color: .yellow, shouldNotify: true)
-            
         case ("/jolly", "jolly", _), ("/jolly", "/jolly", _):
             notification = Notification(message: Messages.yoDawg, color: .gray, shouldNotify: true)
             
         default:
-            notification = Notification(message: Messages.unknown(command: command), color: .red, shouldNotify: true)
+            notification = Notification(message: Messages.unknown(message: message), color: .red, shouldNotify: true)
             
         }
         
@@ -137,19 +141,13 @@ class CommandRouter {
     }
     
     enum Error: Swift.Error {
-        case couldNotCreateNotificationSender
-        case errorCreatingNotification
+        case errorFetchingRepoSpecs
         case errorSendingNotification
-        case hipchatTokenNotFound
     }
     
 }
 
-extension String {
-    
-    static func from(_ command: Command) -> String {
-        return "\(command.0) \(command.1) \(command.2)"
-    }
+fileprivate extension String {
     
     var commandValue: Command {
         let components = self.components(separatedBy: " ")

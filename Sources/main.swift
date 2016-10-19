@@ -24,6 +24,10 @@ HeliumLogger.use()
 print("🐒 Jolly chimp server running!")
 
 let router = Router()
+guard let authToken = Environment.shared.hipchatToken else {
+    print("⛔️ Missing hipchat auth token.")
+    exit(1)
+}
 
 router.get("/") { request, response, next in
     print("↘️ Received GET to /")
@@ -41,29 +45,26 @@ router.post("/") { request, response, next in
     print("↘️ Received POST to /")
     
     var data = Data()
-    
     guard let _ = try? request.read(into: &data)
         else {
             print("⛔️ Could not read JSON body data.")
-            next()
-            return
+            next(); return
     }
-    
     let json = JSON(data: data)
     guard
         let commandMessage = json["item"]["message"]["message"].string,
         let roomId = json["item"]["room"]["id"].int
         else {
             print("⛔️ Got JSON body, but invalid format.")
-            next()
-            return
+            next(); return
     }
-    
-    let commandRouter = CommandRouter(forRoomWithId: "\(roomId)")
-    commandRouter.handle(commandMessage.commandValue).start() { result in
+   
+    let sender = NotificationSender(roomId: "\(roomId)", authenticationToken: authToken)
+    let commandRouter = CommandRouter(notificationSender: sender)
+    commandRouter.handle(commandMessage).start() { result in
         switch result {
-        case .success(let path):
-            print("✅ Notification sent via \(path)")
+        case .success:
+            print("✅ Notification sent!")
             next()
         case .failure(let error):
             print("⛔️ CommandRouter Error: \(error)")
