@@ -1,0 +1,9 @@
+language: swift
+
+script: 
+- "swift build --clean"
+- "swift build"
+- "swift test"
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
