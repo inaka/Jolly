@@ -1,4 +1,4 @@
-// Notification.swift
+// Message.swift
 // Jolly
 //
 // Copyright 2016 Erlang Solutions, Ltd. - http://erlang-solutions.com/
@@ -16,25 +16,16 @@
 
 import Foundation
 
-/// Models a Hipchat notification
-struct Notification {
+struct Message {
+    let text: String
+    let format: Format
     
-    let message: Message
-    let color: Color
-    let shouldNotify: Bool
-    
-    init(message: Message, color: Color = .gray, shouldNotify notify: Bool = true) {
-        self.message = message
-        self.color = color
-        self.shouldNotify = notify
+    init(_ text: String, format: Format = .html) {
+        self.text = text
+        self.format = format
     }
     
-}
-
-extension Notification {
-    
-    enum Color: String {
-        case yellow, green, red, purple, gray, random
+    enum Format: String {
+        case html, text
     }
-    
 }

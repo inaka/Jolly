@@ -407,6 +407,20 @@ class CommandRouterTests: XCTestCase {
         }
     }
     
+    func testNotSlashJollyCommand() {
+        let future = router.handle("/jolly_nope whatever")
+        let expectation = self.expectation(description: "Expected")
+        future.start() { result in
+            guard case .failure(let error) = result
+                else { XCTFail(); return }
+            XCTAssertEqual(error, .notSlashJollyCommand)
+            expectation.fulfill()
+        }
+        self.waitForExpectations(timeout: 3) { error in
+            if let _ = error { XCTFail() }
+        }
+    }
+    
 }
 
 class FakeNotificationSender: NotificationSender {
