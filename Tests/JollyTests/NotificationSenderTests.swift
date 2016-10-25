@@ -15,7 +15,7 @@ class NotificationSenderTests: XCTestCase {
     }
     
     func testURLRequestHTTPMethod() {
-        let notification = Notification(message: Notification.Message("test"))
+        let notification = Notification(message: Message("test"))
         sender.send(notification).start() { _ in }
         let request = session.dataTasks.first?.request
         XCTAssertNotNil(request)
@@ -23,7 +23,7 @@ class NotificationSenderTests: XCTestCase {
     }
 
     func testURLRequestHeaderFields() {
-        let notification = Notification(message: Notification.Message("test"))
+        let notification = Notification(message: Message("test"))
         sender.send(notification).start() { _ in }
         let request = session.dataTasks.first?.request
         XCTAssertNotNil(request)
@@ -32,7 +32,7 @@ class NotificationSenderTests: XCTestCase {
     
     func testURLRequestPath() {
         let sender = NotificationSender(roomId: "123", authenticationToken: "asd", urlSession: session)
-        let notification = Notification(message: Notification.Message("test"))
+        let notification = Notification(message: Message("test"))
         sender.send(notification).start() { _ in }
         let url = session.dataTasks.first?.request?.url
         XCTAssertNotNil(url)
@@ -40,7 +40,7 @@ class NotificationSenderTests: XCTestCase {
     }
     
     func testURLRequestBodyData() {
-        let notification = Notification(message: Notification.Message("test"), color: .green, shouldNotify: true)
+        let notification = Notification(message: Message("test"), color: .green, shouldNotify: true)
         sender.send(notification).start() { _ in }
         let request = session.dataTasks.first?.request
         XCTAssertNotNil(request)
@@ -71,7 +71,7 @@ class NotificationSenderTests: XCTestCase {
         let params: DataTaskCompletionParameters = (Data(), URLResponse(), nil)
         let session = FakeURLSession(customDataTaskCompletionParameters: params)
         let sender = NotificationSender(roomId: "x", authenticationToken: "x", urlSession: session)
-        let notification = Notification(message: Notification.Message("test"))
+        let notification = Notification(message: Message("test"))
         let future = sender.send(notification)
         let expectation = self.expectation(description: "Expected .success")
         future.start() { result in
@@ -87,7 +87,7 @@ class NotificationSenderTests: XCTestCase {
         let params: DataTaskCompletionParameters = (nil, nil, NotificationSender.Error.responseError)
         let session = FakeURLSession(customDataTaskCompletionParameters: params)
         let sender = NotificationSender(roomId: "x", authenticationToken: "x", urlSession: session)
-        let notification = Notification(message: Notification.Message("test"))
+        let notification = Notification(message: Message("test"))
         let future = sender.send(notification)
         let expectation = self.expectation(description: "Expected .failure with .responseError")
         future.start() { result in

@@ -16,7 +16,7 @@
 
 import Foundation
 
-typealias Command = (String, String, String)
+typealias Command = (String, String)
 
 class CommandRouter {
     
@@ -35,6 +35,11 @@ class CommandRouter {
     }
     
     func handle(_ message: String) -> Future<Void, Error> {
+        guard message == "/jolly" || message.hasPrefix("/jolly ") else {
+            return Future() { completion in
+                completion(.failure(.notSlashJollyCommand))
+            }
+        }
         return self.notification(for: message)
             .andThen {
                 self.notificationSender.send($0)
@@ -43,6 +48,8 @@ class CommandRouter {
         }
     }
     
+    // swiftlint:disable cyclomatic_complexity
+    // We want to preserve all the possible paths at this level in this function. If you find a neater way to write it, feel free to collaborate.
     private func notification(for message: String) -> Future<Notification, Error> {
         
         let command = message.commandValue
@@ -50,50 +57,57 @@ class CommandRouter {
         
         switch command {
             
-        case ("/jolly", "", ""):
+        case ("", ""):
             notification = Notification(message: Messages.welcome, color: .purple, shouldNotify: true)
             
-        case ("/jolly", "about", _):
+        case ("about", _):
             notification = Notification(message: Messages.about, color: .gray, shouldNotify: false)
             
-        case ("/jolly", "ping", _):
+        case ("ping", _):
             notification = Notification(message: Messages.pong, color: .green, shouldNotify: true)
             
-        case ("/jolly", "list", _):
+        case ("list", _):
             let repos = self.cache.repos(forRoomWithId: self.roomId)
             notification = Notification(message: Messages.list(with: repos), color: .green, shouldNotify: true)
             
-        case ("/jolly", "report", _):
-            let repos = self.cache.repos(forRoomWithId: self.roomId)
-            return Future() { completion in
-                self.repoSpecProvider.fetchSpecs(for: repos).start() { result in
-                    switch result {
-                    case .success(let specs):
-                        let notification = Notification(message: Messages.report(with: specs), color: .purple, shouldNotify: true)
-                        completion(.success(notification))
-                    case .failure(_):
-                        completion(.failure(.errorFetchingRepoSpecs))
-                    }
-                }
-            }
+        case ("report", _):
+            return self.notificationForReport()
     
-        case ("/jolly", "clear", _):
+        case ("clear", _):
             let repos = self.cache.repos(forRoomWithId: self.roomId)
             for repo in repos {
                 self.cache.remove(repo, fromRoomWithId: self.roomId)
             }
             notification = Notification(message: Messages.cleared, color: .gray, shouldNotify: false)
             
-        case ("/jolly", "watch", ""):
-            notification = Notification(message: Messages.watchHelp, color: .yellow, shouldNotify: true)
+        case ("watch", let argument):
+            return self.notificationForWatching(argument)
             
-        case ("/jolly", "watch", let text):
-            guard let repo = Repo(fullName: text) else {
-                notification = Notification(message: Messages.wrongRepoFormat(text), color: .red, shouldNotify: true)
+        case ("unwatch", let argument):
+            return self.notificationForUnwatching(argument)
+            
+        case ("jolly", _), ("/jolly", _):
+            notification = Notification(message: Messages.yoDawg, color: .gray, shouldNotify: true)
+            
+        default:
+            notification = Notification(message: Messages.unknown(message: message), color: .red, shouldNotify: true)
+        }
+        
+        return Future() { completion in completion(.success(notification)) }
+    }
+    
+    private func notificationForWatching(_ argument: String) -> Future<Notification, Error> {
+        let notification: Notification
+        switch argument {
+        case "":
+            notification = Notification(message: Messages.watchHelp, color: .yellow, shouldNotify: true)
+        default:
+            guard let repo = Repo(fullName: argument) else {
+                notification = Notification(message: Messages.wrongRepoFormat(argument), color: .red, shouldNotify: true)
                 break
             }
             if let existentRepo = self.cache.repos(forRoomWithId: self.roomId)
-                .filter({ $0.fullName == text })
+                .filter({ $0.fullName == argument })
                 .first {
                 notification = Notification(message: Messages.alreadyWatching(repo: existentRepo), color: .green, shouldNotify: true)
                 break
@@ -111,38 +125,51 @@ class CommandRouter {
                     completion(.success(notification))
                 }
             }
-            
-        case ("/jolly", "unwatch", ""):
+        }
+        return Future() { completion in completion(.success(notification)) }
+    }
+    
+    private func notificationForUnwatching(_ argument: String) -> Future<Notification, Error> {
+        let notification: Notification
+        switch argument {
+        case "":
             notification = Notification(message: Messages.unwatchHelp, color: .yellow, shouldNotify: true)
-            
-        case ("/jolly", "unwatch", let text):
-            guard let repo = Repo(fullName: text) else {
-                notification = Notification(message: Messages.wrongRepoFormat(text), color: .red, shouldNotify: true)
+        default:
+            guard let repo = Repo(fullName: argument) else {
+                notification = Notification(message: Messages.wrongRepoFormat(argument), color: .red, shouldNotify: true)
                 break
             }
             guard let existentRepo = self.cache.repos(forRoomWithId: self.roomId)
-                .filter({ $0.fullName == text })
+                .filter({ $0.fullName == argument })
                 .first else {
                     notification = Notification(message: Messages.wasntWatching(repo: repo), color: .red, shouldNotify: true)
                     break
             }
             self.cache.remove(existentRepo, fromRoomWithId: self.roomId)
             notification = Notification(message: Messages.unwatchingWithSuccess(repo: repo), color: .green, shouldNotify: true)
-            
-        case ("/jolly", "jolly", _), ("/jolly", "/jolly", _):
-            notification = Notification(message: Messages.yoDawg, color: .gray, shouldNotify: true)
-            
-        default:
-            notification = Notification(message: Messages.unknown(message: message), color: .red, shouldNotify: true)
-            
         }
-        
         return Future() { completion in completion(.success(notification)) }
+    }
+    
+    private func notificationForReport() -> Future<Notification, Error> {
+        let repos = self.cache.repos(forRoomWithId: self.roomId)
+        return Future() { completion in
+            self.repoSpecProvider.fetchSpecs(for: repos).start() { result in
+                switch result {
+                case .success(let specs):
+                    let notification = Notification(message: Messages.report(with: specs), color: .purple, shouldNotify: true)
+                    completion(.success(notification))
+                case .failure(_):
+                    completion(.failure(.errorFetchingRepoSpecs))
+                }
+            }
+        }
     }
     
     enum Error: Swift.Error {
         case errorFetchingRepoSpecs
         case errorSendingNotification
+        case notSlashJollyCommand
     }
     
 }
@@ -151,10 +178,8 @@ fileprivate extension String {
     
     var commandValue: Command {
         let components = self.components(separatedBy: " ")
-        let tuple = (components.count > 0 ? components[0] : "",
-                     components.count > 1 ? components[1] : "",
-                     components.count > 2 ? components[2] : "")
-        return tuple
+        return (components.count > 1 ? components[1] : "",
+                components.count > 2 ? components[2] : "")
     }
     
 }
