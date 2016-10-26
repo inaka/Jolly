@@ -8,8 +8,7 @@ class CacheTests: XCTestCase {
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        let defaults = InMemoryUserDefaults()
-        cache = Cache(defaults: defaults)
+        cache = Cache(defaults: InMemoryUserDefaults())
     }
     
     func testAddRepo() {
@@ -20,6 +19,11 @@ class CacheTests: XCTestCase {
         let savedRepos = cache.repos(forRoomWithId: "1")
         XCTAssertEqual(savedRepos.count, 1)
         XCTAssertEqual(savedRepos[0].fullName, "inaka/jolly")
+    }
+    
+    func testInitialState() {
+        let savedRepos = cache.repos(forRoomWithId: "1")
+        XCTAssertEqual(savedRepos.count, 0)
     }
     
     func testRemoveExistentRepo() {
@@ -96,8 +100,8 @@ class InMemoryUserDefaults: UserDefaults {
         dict[defaultName] = value
     }
     
-    override func value(forKey key: String) -> Any? {
-        return dict[key]
+    override func array(forKey key: String) -> [Any]? {
+        return dict[key] as? [Any]
     }
     
 }

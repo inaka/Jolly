@@ -19,11 +19,11 @@ import Foundation
 extension URLRequest {
     
     static func postRequest(to url: URL, with data: Data) -> URLRequest {
-        let request = NSMutableURLRequest(url: url)
+        var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = data
-        return request as URLRequest
+        return request
     }
     
 }

@@ -38,7 +38,7 @@ class Cache {
     
     func add(_ repo: Repo, toRoomWithId roomId: String) {
         let repoId = repo.fullName
-        guard let reposIds = self.defaults.value(forKey: roomId) as? [String] else {
+        guard let reposIds = self.defaults.array(forKey: roomId) as? [String] else {
             self.defaults.set([repoId], forKey: roomId)
             return
         }
@@ -46,13 +46,13 @@ class Cache {
     }
     
     func remove(_ repo: Repo, fromRoomWithId roomId: String) {
-        guard let reposIds = self.defaults.value(forKey: roomId) as? [String] else { return }
+        guard let reposIds = self.defaults.array(forKey: roomId) as? [String] else { return }
         self.defaults.set(reposIds.filter { $0 != repo.fullName },
                           forKey: roomId)
     }
     
     func repos(forRoomWithId roomId: String) -> [Repo] {
-        guard let reposIds = self.defaults.value(forKey: roomId) as? [String] else { return [Repo]() }
+        guard let reposIds = self.defaults.array(forKey: roomId) as? [String] else { return [Repo]() }
         return reposIds
             .sorted { $0.lowercased() < $1.lowercased() }
             .flatMap { Repo(fullName: $0) }
