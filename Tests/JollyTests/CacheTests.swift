@@ -1,6 +1,21 @@
 import XCTest
 @testable import Jolly
 
+#if os(Linux)
+    extension CacheTests {
+        static var allTests: [(String, (CacheTests) -> () throws -> Void)] {
+            return [
+                ("testAddRepo", testAddRepo),
+                ("testInitialState", testInitialState),
+                ("testRemoveExistentRepo", testRemoveExistentRepo),
+                ("testRemoveNonExistentRepo", testRemoveNonExistentRepo),
+                ("testReposAreSortedAlphabetically", testReposAreSortedAlphabetically),
+                ("testAddAndRemoveReposInDifferentRooms", testAddAndRemoveReposInDifferentRooms)
+            ]
+        }
+    }
+#endif
+
 class CacheTests: XCTestCase {
     
     var cache: Cache!

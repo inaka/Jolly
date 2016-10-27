@@ -1,6 +1,21 @@
 import XCTest
 @testable import Jolly
 
+#if os(Linux)
+    extension NotificationSenderTests {
+        static var allTests: [(String, (CacheTests) -> () throws -> Void)] {
+            return [
+                ("testURLRequestHTTPMethod", testURLRequestHTTPMethod),
+                ("testURLRequestHeaderFields", testURLRequestHeaderFields),
+                ("testURLRequestPath", testURLRequestPath),
+                ("testURLRequestBodyData", testURLRequestBodyData),
+                ("testSuccessfulResponse", testSuccessfulResponse),
+                ("testResponseWithError", testResponseWithError)
+            ]
+        }
+    }
+#endif
+
 class NotificationSenderTests: XCTestCase {
     
     var sender: NotificationSender!
