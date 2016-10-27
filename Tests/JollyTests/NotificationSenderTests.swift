@@ -3,7 +3,7 @@ import XCTest
 
 #if os(Linux)
     extension NotificationSenderTests {
-        static var allTests: [(String, (CacheTests) -> () throws -> Void)] {
+        static var allTests: [(String, (NotificationSenderTests) -> () throws -> Void)] {
             return [
                 ("testURLRequestHTTPMethod", testURLRequestHTTPMethod),
                 ("testURLRequestHeaderFields", testURLRequestHeaderFields),

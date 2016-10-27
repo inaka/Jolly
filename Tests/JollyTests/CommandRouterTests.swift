@@ -3,7 +3,7 @@ import XCTest
 
 #if os(Linux)
     extension CommandRouterTests {
-        static var allTests: [(String, (CacheTests) -> () throws -> Void)] {
+        static var allTests: [(String, (CommandRouterTests) -> () throws -> Void)] {
             return [
                 ("testCommandJolly", testCommandJolly),
                 ("testCommandJollyAbout", testCommandJollyAbout),

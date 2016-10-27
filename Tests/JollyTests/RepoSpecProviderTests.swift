@@ -3,7 +3,7 @@ import XCTest
 
 #if os(Linux)
     extension RepoSpecProviderTests {
-        static var allTests: [(String, (CacheTests) -> () throws -> Void)] {
+        static var allTests: [(String, (RepoSpecProviderTests) -> () throws -> Void)] {
             return [
                 ("testFetchSpecsRequestMethod", testFetchSpecsRequestMethod),
                 ("testFetchSpecsRequestHeaderFields", testFetchSpecsRequestHeaderFields),

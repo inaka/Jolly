@@ -3,7 +3,7 @@ import XCTest
 
 #if os(Linux)
     extension RepoTests {
-        static var allTests: [(String, (CacheTests) -> () throws -> Void)] {
+        static var allTests: [(String, (RepoTests) -> () throws -> Void)] {
             return [
                 ("testProperFormat", testProperFormat),
                 ("testWrongFormatNoSlashes", testWrongFormatNoSlashes),

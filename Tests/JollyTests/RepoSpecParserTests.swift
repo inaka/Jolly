@@ -3,7 +3,7 @@ import XCTest
 
 #if os(Linux)
     extension RepoSpecParserTests {
-        static var allTests: [(String, (CacheTests) -> () throws -> Void)] {
+        static var allTests: [(String, (RepoSpecParserTests) -> () throws -> Void)] {
             return [
                 ("testParseSuccess", testParseSuccess),
                 ("testParseFailure", testParseFailure)
