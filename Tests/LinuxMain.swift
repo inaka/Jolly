@@ -7,5 +7,5 @@ XCTMain([
     testCase(NotificationSenderTests.allTests),
     testCase(RepoSpecParserTests.allTests),
     testCase(RepoSpecProviderTests.allTests),
-    testCase(RepoTests.allTests)
+    testCase(RepoTests.allTests),
 ])

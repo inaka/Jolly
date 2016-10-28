@@ -1,5 +1,6 @@
-import XCTest
 @testable import Jolly
+import XCTest
+import Foundation
 
 #if os(Linux)
     extension RepoSpecParserTests {

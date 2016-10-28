@@ -1,12 +1,13 @@
-import XCTest
 @testable import Jolly
+import XCTest
+import Foundation
 
 #if os(Linux)
     extension CommandRouterTests {
         static var allTests: [(String, (CommandRouterTests) -> () throws -> Void)] {
             return [
                 ("testCommandJolly", testCommandJolly),
-                ("testCommandJollyAbout", testCommandJollyAbout),
+                ("testCommandAbout", testCommandAbout),
                 ("testCommandPing", testCommandPing),
                 ("testCommandList", testCommandList),
                 ("testCommandReport", testCommandReport),
@@ -14,7 +15,7 @@ import XCTest
                 ("testCommandWatch", testCommandWatch),
                 ("testCommandUnwatch", testCommandUnwatch),
                 ("testCommandWatchValidRepo", testCommandWatchValidRepo),
-                ("testCommandWatchInvalidRepo", testCommandWatchInvalidRepo),
+                ("testCommandWatchInvalidRepoFormat", testCommandWatchInvalidRepoFormat),
                 ("testCommandWatchValidRepoThatIsAlreadyBeingWatched", testCommandWatchValidRepoThatIsAlreadyBeingWatched),
                 ("testCommandWatchNonExistentRepo", testCommandWatchNonExistentRepo),
                 ("testCommandUnwatchRepoThatIsBeingWatched", testCommandUnwatchRepoThatIsBeingWatched),
