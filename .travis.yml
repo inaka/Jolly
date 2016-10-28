@@ -9,5 +9,4 @@ env:
   - SWIFT_VERSION=3.0
 script:
   - swift build
-  - swift test
   
