@@ -1,5 +1,17 @@
-import XCTest
 @testable import Jolly
+import XCTest
+import Foundation
+
+#if os(Linux)
+    extension RepoSpecParserTests {
+        static var allTests: [(String, (RepoSpecParserTests) -> () throws -> Void)] {
+            return [
+                ("testParseSuccess", testParseSuccess),
+                ("testParseFailure", testParseFailure)
+            ]
+        }
+    }
+#endif
 
 class RepoSpecParserTests: XCTestCase {
     

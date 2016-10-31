@@ -1,5 +1,21 @@
-import XCTest
 @testable import Jolly
+import XCTest
+import Foundation
+
+#if os(Linux)
+    extension RepoSpecProviderTests {
+        static var allTests: [(String, (RepoSpecProviderTests) -> () throws -> Void)] {
+            return [
+                ("testFetchSpecsRequestMethod", testFetchSpecsRequestMethod),
+                ("testFetchSpecsRequestHeaderFields", testFetchSpecsRequestHeaderFields),
+                ("testFetchSpecsRequestPath", testFetchSpecsRequestPath),
+                ("testFetchMultipleSpecsNoRepos", testFetchMultipleSpecsNoRepos),
+                ("testFetchMultipleSpecsResponseSuccess", testFetchMultipleSpecsResponseSuccess),
+                ("testFetchMultipleSpecsResponseFailure", testFetchMultipleSpecsResponseFailure)
+            ]
+        }
+    }
+#endif
 
 class RepoSpecProviderTests: XCTestCase {
     

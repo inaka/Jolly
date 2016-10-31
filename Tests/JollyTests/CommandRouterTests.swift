@@ -1,5 +1,35 @@
-import XCTest
 @testable import Jolly
+import XCTest
+import Foundation
+
+#if os(Linux)
+    extension CommandRouterTests {
+        static var allTests: [(String, (CommandRouterTests) -> () throws -> Void)] {
+            return [
+                ("testCommandJolly", testCommandJolly),
+                ("testCommandAbout", testCommandAbout),
+                ("testCommandPing", testCommandPing),
+                ("testCommandList", testCommandList),
+                ("testCommandReport", testCommandReport),
+                ("testCommandClear", testCommandClear),
+                ("testCommandWatch", testCommandWatch),
+                ("testCommandUnwatch", testCommandUnwatch),
+                ("testCommandWatchValidRepo", testCommandWatchValidRepo),
+                ("testCommandWatchInvalidRepoFormat", testCommandWatchInvalidRepoFormat),
+                ("testCommandWatchValidRepoThatIsAlreadyBeingWatched", testCommandWatchValidRepoThatIsAlreadyBeingWatched),
+                ("testCommandWatchNonExistentRepo", testCommandWatchNonExistentRepo),
+                ("testCommandUnwatchRepoThatIsBeingWatched", testCommandUnwatchRepoThatIsBeingWatched),
+                ("testCommandUnwatchRepoThatIsNotBeingWatched", testCommandUnwatchRepoThatIsNotBeingWatched),
+                ("testCommandUnwatchInvalidRepoFormat", testCommandUnwatchInvalidRepoFormat),
+                ("testCommandYoDawg", testCommandYoDawg),
+                ("testCommandUnknown", testCommandUnknown),
+                ("testErrorSendingNotification", testErrorSendingNotification),
+                ("testErrorFetchingRepoSpecsWhileCreatingReport", testErrorFetchingRepoSpecsWhileCreatingReport),
+                ("testNotSlashJollyCommand", testNotSlashJollyCommand)
+            ]
+        }
+    }
+#endif
 
 class CommandRouterTests: XCTestCase {
     
@@ -232,7 +262,7 @@ class CommandRouterTests: XCTestCase {
         }
     }
     
-    func testCommandWatchValidRepoThatWasAlreadyBeingWatched() {
+    func testCommandWatchValidRepoThatIsAlreadyBeingWatched() {
         let future = router.handle("/jolly watch watched/repo1")
         let expectation = self.expectation(description: "Expected")
         future.start() { result in
@@ -275,7 +305,7 @@ class CommandRouterTests: XCTestCase {
         }
     }
     
-    func testCommandUnwatchRepoThatWasBeingWatched() {
+    func testCommandUnwatchRepoThatIsBeingWatched() {
         let future = router.handle("/jolly unwatch watched/repo1")
         let expectation = self.expectation(description: "Expected")
         future.start() { result in
@@ -298,7 +328,7 @@ class CommandRouterTests: XCTestCase {
         }
     }
     
-    func testCommandUnwatchRepoThatWasNotBeingWatched() {
+    func testCommandUnwatchRepoThatIsNotBeingWatched() {
         provider.shouldReturnValidSpecs = false
         let future = router.handle("/jolly unwatch nonwatched/repo1")
         let expectation = self.expectation(description: "Expected")
@@ -392,7 +422,7 @@ class CommandRouterTests: XCTestCase {
         }
     }
     
-    func testErrorFetchingRepoSpecsWhileProducingReport() {
+    func testErrorFetchingRepoSpecsWhileCreatingReport() {
         provider.shouldReturnValidSpecs = false
         let future = router.handle("/jolly report")
         let expectation = self.expectation(description: "Expected")
@@ -425,10 +455,10 @@ class CommandRouterTests: XCTestCase {
 
 class FakeNotificationSender: NotificationSender {
     
-    var notification: Notification?
+    var notification: Jolly.Notification?
     var shouldGetNotificationDeliveryFailure = false
     
-    override func send(_ notification: Notification) -> Future<Void, NotificationSender.Error> {
+    override func send(_ notification: Jolly.Notification) -> Future<Void, NotificationSender.Error> {
         self.notification = notification
         return Future() { completion in
             if self.shouldGetNotificationDeliveryFailure {

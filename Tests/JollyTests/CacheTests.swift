@@ -1,5 +1,21 @@
-import XCTest
 @testable import Jolly
+import XCTest
+import Foundation
+
+#if os(Linux)
+    extension CacheTests {
+        static var allTests: [(String, (CacheTests) -> () throws -> Void)] {
+            return [
+                ("testAddRepo", testAddRepo),
+                ("testInitialState", testInitialState),
+                ("testRemoveExistentRepo", testRemoveExistentRepo),
+                ("testRemoveNonExistentRepo", testRemoveNonExistentRepo),
+                ("testReposAreSortedAlphabetically", testReposAreSortedAlphabetically),
+                ("testAddAndRemoveReposInDifferentRooms", testAddAndRemoveReposInDifferentRooms)
+            ]
+        }
+    }
+#endif
 
 class CacheTests: XCTestCase {
     
@@ -8,8 +24,7 @@ class CacheTests: XCTestCase {
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        let defaults = InMemoryUserDefaults()
-        cache = Cache(defaults: defaults)
+        cache = Cache(defaults: InMemoryUserDefaults())
     }
     
     func testAddRepo() {
@@ -20,6 +35,11 @@ class CacheTests: XCTestCase {
         let savedRepos = cache.repos(forRoomWithId: "1")
         XCTAssertEqual(savedRepos.count, 1)
         XCTAssertEqual(savedRepos[0].fullName, "inaka/jolly")
+    }
+    
+    func testInitialState() {
+        let savedRepos = cache.repos(forRoomWithId: "1")
+        XCTAssertEqual(savedRepos.count, 0)
     }
     
     func testRemoveExistentRepo() {
@@ -96,8 +116,8 @@ class InMemoryUserDefaults: UserDefaults {
         dict[defaultName] = value
     }
     
-    override func value(forKey key: String) -> Any? {
-        return dict[key]
+    override func array(forKey key: String) -> [Any]? {
+        return dict[key] as? [Any]
     }
     
 }

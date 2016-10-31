@@ -25,7 +25,7 @@ print("🐒 Jolly chimp server running!")
 
 let router = Router()
 guard let authToken = Environment.shared.hipchatToken else {
-    print("⛔️ Missing hipchat auth token.")
+    print("⛔️ Missing hipchat auth token. Make sure a 'HIPCHAT_TOKEN' environment variable is set.")
     exit(1)
 }
 

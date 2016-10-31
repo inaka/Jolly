@@ -83,10 +83,10 @@ class RepoSpecProvider {
 extension URLRequest {
     
     static func githubGETRequest(for url: URL) -> URLRequest {
-        let request = NSMutableURLRequest(url: url)
+        var request = URLRequest(url: url)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
-        return request as URLRequest
+        return request
     }
     
 }

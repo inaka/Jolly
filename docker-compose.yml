@@ -1,0 +1,22 @@
+version: '2'
+services:
+  web:
+    build: .
+    command: ./build/debug/Jolly
+    container_name: jolly
+    restart: always
+    env_file: .env
+    ports:
+     - "8081:8090"
+    networks:
+      app_net:
+        ipv4_address: 172.4.0.24
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.4.0.0/24
+        gateway: 172.4.0.1
+        
