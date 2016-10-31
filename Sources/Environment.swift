@@ -12,7 +12,7 @@ class Environment {
     static let shared = Environment()
     
     var hipchatToken: String? {
-        guard let rawValue = getenv("hipchat_token") else { return nil }
+        guard let rawValue = getenv("HIPCHAT_TOKEN") else { return nil }
         return String(utf8String: rawValue)
     }
 }
