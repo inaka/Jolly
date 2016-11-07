@@ -37,7 +37,7 @@ struct Messages {
     static let unwatchHelp = Message("🙊 Want to remove a repo from the list? Please, <b>specify the repo</b>.<br>∙ <b>Format</b>: <code>/jolly unwatch :org/:repo</code><br>∙ <b>Example</b>: <code>/jolly unwatch inaka/Jayme</code>")
     
     static func unknown(message: String) -> Message {
-        return Message("🙊 I don't know what <code>\(message))</code> is supposed to mean... Need help? type <code>/jolly</code>")
+        return Message("🙊 I don't know what <code>\(message)</code> is supposed to mean... Need help? type <code>/jolly</code>")
     }
     
     static let yoDawg = Message("(yodawg)", format: .text)
