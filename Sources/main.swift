@@ -75,4 +75,10 @@ router.post("/") { request, response, next in
 }
 
 Kitura.addHTTPServer(onPort: 8090, with: router)
-Kitura.run()
+Kitura.start()
+
+if let response = readLine(strippingNewline: true) {
+    Kitura.stop()
+    print("🐒 Jolly chimp server has stopped gracefully.")
+    exit(0)
+}
