@@ -1,5 +1,5 @@
 #Jolly
-[![Build Status](https://api.travis-ci.org/inaka/Jolly.svg)](https://travis-ci.org/inaka/Jolly) [![Codecov](https://codecov.io/gh/inaka/Jolly/branch/master/graph/badge.svg)](https://codecov.io/gh/inaka/jolly) [![Swift](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat)](https://swift.org/)[![Twitter](https://img.shields.io/badge/twitter-@inaka-blue.svg?style=flat)](http://twitter.com/inaka)
+[![Build Status](https://api.travis-ci.org/inaka/Jolly.svg)](https://travis-ci.org/inaka/Jolly) [![Codecov](https://codecov.io/gh/inaka/Jolly/branch/master/graph/badge.svg)](https://codecov.io/gh/inaka/jolly) [![Swift](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat)](https://swift.org/) [![Twitter](https://img.shields.io/badge/twitter-@inaka-blue.svg?style=flat)](http://twitter.com/inaka)
 
 [Jolly Chimp monkey](http://pixar.wikia.com/wiki/Monkey) that allows you to monitor Github repos straight from [HipChat](https://www.hipchat.com/).
 
